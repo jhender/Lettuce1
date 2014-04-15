@@ -65,6 +65,13 @@ public class GridViewFragment extends Fragment {
 
         fragmentView = inflater.inflate(R.layout.activity_main, container, false);
 
+        if (photoarraylist != null) {
+            adapter = new GridViewAdapter(faActivity,photoarraylist);
+            // Binds the Adapter to the ListView
+            gridview = (GridView) fragmentView.findViewById(R.id.gridview);
+            gridview.setAdapter(adapter);
+        }
+
         return fragmentView;
     }
 
@@ -77,6 +84,7 @@ public class GridViewFragment extends Fragment {
         //new RemoteDataTask().execute();
 
     }
+
 
     private void startNewAsyncTask() {
         MyAsyncTask asyncTask = new MyAsyncTask(this);
