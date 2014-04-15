@@ -17,7 +17,7 @@ public class MainActivity extends FragmentActivity implements
     private TabsPagerAdapter mAdapter;
     private ActionBar actionBar;
     // Tab titles
-    private String[] tabs = {"one", "2", "login"};
+    private String[] tabs = {"one", "2", "GridView"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +91,7 @@ public class MainActivity extends FragmentActivity implements
                     return new BlankFragment2();
                 case 2:
                     // Movies fragment activity
-                    return new BlankFragment();
+                    return new GridViewFragment();
             }
 
             return null;
