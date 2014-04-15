@@ -1,6 +1,5 @@
 package com.jhdev.lettuce;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.Date;
 import java.text.SimpleDateFormat;
@@ -8,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.GridView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.ParseAnalytics;
@@ -36,7 +34,6 @@ import com.parse.ParseUser;
 public class LettuceActivity extends Activity {
 	 
 	//Define stuff
-	TextView textView;	
 	//Button uploadButton;
 	static String imageFileName;
 	

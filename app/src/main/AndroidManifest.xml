@@ -10,7 +10,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-        
+    
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-feature android:name="android.hardware.camera" />
@@ -27,28 +27,18 @@
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name="com.jhdev.lettuce.SingleItemView"
+            android:label=""
             android:parentActivityName="com.jhdev.lettuce.LettuceActivity"
-            android:screenOrientation="portrait"
-			android:label="">
+            android:screenOrientation="portrait" >
+
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".LettuceActivity" />
-        </activity>
-        <activity
-            android:name="com.jhdev.lettuce.LoginActivity"
-            android:label="@string/title_activity_login"
-            android:parentActivityName="com.jhdev.lettuce.LettuceActivity" >
-        </activity>
-        <activity
-            android:name="com.jhdev.lettuce.RegisterActivity"
-            android:label="@string/title_activity_register" >
         </activity>
         <activity
             android:name="com.jhdev.lettuce.ParseLoginActivity"
@@ -74,6 +64,15 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".LettuceActivity" />
+        </activity>
+        <activity
+            android:name="com.jhdev.lettuce.MainActivity"
+            android:label="@string/title_activity_main" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 
