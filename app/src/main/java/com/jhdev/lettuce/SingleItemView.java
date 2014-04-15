@@ -45,9 +45,7 @@ public class SingleItemView extends Activity {
         final TextView description = (TextView) findViewById(R.id.textView2);
         final TextView usernametextview = (TextView) findViewById(R.id.textView3);
         final TextView location = (TextView) findViewById(R.id.textViewLocation);
-        
-        //title.setText(objectID);
-        
+
         ParseQuery<ParseObject> query = ParseQuery.getQuery("ImageUpload");
         query.include("createdBy");
         query.getInBackground(objectID, new GetCallback<ParseObject>() {
@@ -56,10 +54,13 @@ public class SingleItemView extends Activity {
               // retrieved object.
             	title.setText(object.getString("Title"));
             	description.setText(object.getString("Description"));
+
+                // Get the saved location and display it if not empty
             	ParseGeoPoint userLocation = (ParseGeoPoint) object.getParseGeoPoint("geoPoint");
-            	String coor = String.valueOf(userLocation.getLatitude()) + ", " + String.valueOf(userLocation.getLongitude());
-            	location.setText(coor);
-            	
+                if (userLocation != null) {
+                    String coor = String.valueOf(userLocation.getLatitude()) + ", " + String.valueOf(userLocation.getLongitude());
+                    location.setText(coor);
+                }
             	
             	// getting the user who created the Game
             	ParseUser createdByUser = object.getParseUser("createdBy");
