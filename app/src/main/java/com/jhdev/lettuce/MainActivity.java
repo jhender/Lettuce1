@@ -88,7 +88,7 @@ public class MainActivity extends FragmentActivity implements
                     return new BlankFragment();
                 case 1:
                     // Games fragment activity
-                    return new BlankFragment();
+                    return new BlankFragment2();
                 case 2:
                     // Movies fragment activity
                     return new BlankFragment();
