@@ -49,7 +49,7 @@ public class GridViewFragment extends Fragment {
     private Uri fileUri; // file URI to store image/video
     private static GridView gridview;
     private static List<ParseObject> ob;
-    ProgressDialog mProgressDialog;
+    private static ProgressDialog mProgressDialog;
     private static GridViewAdapter adapter;
     private static List<PhotoList> photoarraylist = null;
 
@@ -80,6 +80,9 @@ public class GridViewFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         setRetainInstance(true);
+
+        mProgressDialog = new ProgressDialog(getActivity());
+
         startNewAsyncTask();
         //new RemoteDataTask().execute();
 
@@ -103,6 +106,15 @@ public class GridViewFragment extends Fragment {
 
         private MyAsyncTask (GridViewFragment fragment) {
             this.fragmentWeakReference = new WeakReference<GridViewFragment>(fragment);
+        }
+
+        //@Override
+        protected void onPreExecute() {
+
+            mProgressDialog.setMessage("Loading...");
+            mProgressDialog.setIndeterminate(false);
+            // Show progressdialog
+            mProgressDialog.show();
         }
 
         @Override
@@ -150,12 +162,17 @@ public class GridViewFragment extends Fragment {
                 // Binds the Adapter to the ListView
                 gridview.setAdapter(adapter);
                 // Close the progressdialog
-                //mProgressDialog.dismiss();
+                if (mProgressDialog.isShowing()) {
+                    mProgressDialog.dismiss();
+                }
             }
         }
     }
 
 
+    /***
+     * above section optimised for fragments
+     */
 
 
 
@@ -347,67 +364,67 @@ public class GridViewFragment extends Fragment {
      *
      */
 
-    // RemoteDataTask AsyncTask
-    private class RemoteDataTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            // Create a progressdialog
-            mProgressDialog = new ProgressDialog(getActivity());
-            // Set progressdialog title
-            // mProgressDialog.setTitle("");
-            // Set progressdialog message
-            mProgressDialog.setMessage("Loading...");
-            mProgressDialog.setIndeterminate(false);
-            // Show progressdialog
-            mProgressDialog.show();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            // Create the array
-            photoarraylist = new ArrayList<PhotoList>();
-            try {
-                // Locate the class table named "ImageUpload" in Parse.com
-                ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(
-                        "ImageUpload");
-                // Locate the column named "position" in Parse.com and order list
-                // by descending order of created.
-                query.orderByDescending("createdAt");
-                query.setLimit(15);
-                ob = query.find();
-                for (ParseObject po : ob) {
-                    //retrieve objectID and Title
-                    String stringTitle = (String) po.get("Title");
-                    String stringObjectID = (String) po.getObjectId();
-
-                    //retrieve the image file
-                    ParseFile image = (ParseFile) po.get("Photo");
-                    PhotoList map = new PhotoList();
-                    map.setPhoto(image.getUrl());
-                    map.setObjectID(stringObjectID);
-                    map.setTitle(stringTitle);
-                    photoarraylist.add(map);
-                }
-            } catch (ParseException e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            // Locate the gridview in gridview_main.xml
-            gridview = (GridView) fragmentView.findViewById(R.id.gridview);
-            // Pass the results into ListViewAdapter.java
-            adapter = new GridViewAdapter(getActivity(),photoarraylist);
-            // Binds the Adapter to the ListView
-            gridview.setAdapter(adapter);
-            // Close the progressdialog
-            mProgressDialog.dismiss();
-        }
-    }
+//    // RemoteDataTask AsyncTask
+//    private class RemoteDataTask extends AsyncTask<Void, Void, Void> {
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//            // Create a progressdialog
+//            mProgressDialog = new ProgressDialog(getActivity());
+//            // Set progressdialog title
+//            // mProgressDialog.setTitle("");
+//            // Set progressdialog message
+//            mProgressDialog.setMessage("Loading...");
+//            mProgressDialog.setIndeterminate(false);
+//            // Show progressdialog
+//            mProgressDialog.show();
+//        }
+//
+//        @Override
+//        protected Void doInBackground(Void... params) {
+//            // Create the array
+//            photoarraylist = new ArrayList<PhotoList>();
+//            try {
+//                // Locate the class table named "ImageUpload" in Parse.com
+//                ParseQuery<ParseObject> query = new ParseQuery<ParseObject>(
+//                        "ImageUpload");
+//                // Locate the column named "position" in Parse.com and order list
+//                // by descending order of created.
+//                query.orderByDescending("createdAt");
+//                query.setLimit(15);
+//                ob = query.find();
+//                for (ParseObject po : ob) {
+//                    //retrieve objectID and Title
+//                    String stringTitle = (String) po.get("Title");
+//                    String stringObjectID = (String) po.getObjectId();
+//
+//                    //retrieve the image file
+//                    ParseFile image = (ParseFile) po.get("Photo");
+//                    PhotoList map = new PhotoList();
+//                    map.setPhoto(image.getUrl());
+//                    map.setObjectID(stringObjectID);
+//                    map.setTitle(stringTitle);
+//                    photoarraylist.add(map);
+//                }
+//            } catch (ParseException e) {
+//                Log.e("Error", e.getMessage());
+//                e.printStackTrace();
+//            }
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Void result) {
+//            // Locate the gridview in gridview_main.xml
+//            gridview = (GridView) fragmentView.findViewById(R.id.gridview);
+//            // Pass the results into ListViewAdapter.java
+//            adapter = new GridViewAdapter(getActivity(),photoarraylist);
+//            // Binds the Adapter to the ListView
+//            gridview.setAdapter(adapter);
+//            // Close the progressdialog
+//            mProgressDialog.dismiss();
+//        }
+//    }
 
     /**
      *  Action Bar
@@ -429,7 +446,7 @@ public class GridViewFragment extends Fragment {
                 captureImage();
                 return true;
             case R.id.Refresh:
-                new RemoteDataTask().execute();
+                //new RemoteDataTask().execute();
                 //Toast.makeText(this, "Not yet available", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.Login:

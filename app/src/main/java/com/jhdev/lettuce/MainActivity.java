@@ -17,7 +17,7 @@ public class MainActivity extends FragmentActivity implements
     private TabsPagerAdapter mAdapter;
     private ActionBar actionBar;
     // Tab titles
-    private String[] tabs = {"one", "2", "GridView"};
+    private String[] tabs = {"Grid", "Blank 2", " Blank 1"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,13 +85,13 @@ public class MainActivity extends FragmentActivity implements
             switch (index) {
                 case 0:
                     // Top Rated fragment activity
-                    return new BlankFragment();
+                    return new GridViewFragment();
                 case 1:
                     // Games fragment activity
                     return new BlankFragment2();
                 case 2:
                     // Movies fragment activity
-                    return new GridViewFragment();
+                    return new BlankFragment();
             }
 
             return null;
