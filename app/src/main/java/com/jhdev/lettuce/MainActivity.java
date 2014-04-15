@@ -105,9 +105,5 @@ public class MainActivity extends FragmentActivity implements
 
     }
 
-    /**
-     * on swiping the viewpager make respective tab selected
-     * */
-
 
 }
