@@ -1,0 +1,25 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.jhdev.lettuce.MainActivity" >
+
+    <item
+        android:id="@+id/take_picture"
+        android:orderInCategory="50"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_action_camera"/>
+    <item
+        android:id="@+id/Refresh"
+        android:orderInCategory="60"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_refresh"/>
+    <item
+        android:id="@+id/Login"
+        android:orderInCategory="550"
+        android:showAsAction="ifRoom"
+        android:title="Login"/>
+    <item
+        android:id="@+id/Logout"
+        android:orderInCategory="110"
+        android:showAsAction="never"
+        android:title="Logout"/>    
+</menu>

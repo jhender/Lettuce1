@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.jhdev.lettuce"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="15"
+        android:targetSdkVersion="19" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+        
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature android:name="android.hardware.camera" />
+
+    <application
+        android:name="com.jhdev.lettuce.ParseApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_action_good"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.jhdev.lettuce.LettuceActivity"
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.jhdev.lettuce.SingleItemView"
+            android:parentActivityName="com.jhdev.lettuce.LettuceActivity"
+            android:screenOrientation="portrait"
+			android:label="">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LettuceActivity" />
+        </activity>
+        <activity
+            android:name="com.jhdev.lettuce.LoginActivity"
+            android:label="@string/title_activity_login"
+            android:parentActivityName="com.jhdev.lettuce.LettuceActivity" >
+        </activity>
+        <activity
+            android:name="com.jhdev.lettuce.RegisterActivity"
+            android:label="@string/title_activity_register" >
+        </activity>
+        <activity
+            android:name="com.jhdev.lettuce.ParseLoginActivity"
+            android:label="@string/title_activity_parselogin"
+            android:parentActivityName="com.jhdev.lettuce.LettuceActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="LettuceActivity" />
+        </activity>
+        <activity
+            android:name="com.jhdev.lettuce.ParseSignup"
+            android:label="@string/title_activity_parse_signup"
+            android:parentActivityName="com.jhdev.lettuce.ParseLoginActivity" >
+        </activity>
+        <activity
+            android:name="com.jhdev.lettuce.ParseForgetPassword"
+            android:label="@string/title_activity_parse_forget_password" >
+        </activity>
+        <activity
+            android:name="com.jhdev.lettuce.PostCreateActivity"
+            android:label="@string/title_activity_post_create"
+            android:parentActivityName="com.jhdev.lettuce.LettuceActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LettuceActivity" />
+        </activity>
+    </application>
+
+</manifest>

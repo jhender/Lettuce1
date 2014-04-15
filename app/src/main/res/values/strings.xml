@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Lettuce</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main">Lettuce</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_register">Register</string>
+    <string name="action_logout">Logout</string>
+    <string name="username">Username:</string>
+    <string name="sign_up_label">Sign Up</string>
+    <string name="password_label">Password:</string>
+    <string name="already_have_an_account_label">Already Have An Account? Log In!</string>
+    <string name="login_label">Login</string>
+    <string name="dont_have_an_account_label">Don\'t have an account? Register!</string>
+    <string name="title_activity_parselogin">Login</string>
+    <string name="image">Image</string>
+
+    <!-- Login/Account creation screen -->
+    <string name="signIn">Sign In</string>
+    <string name="submit">Submit</string>
+    <string name="orText">Or</string>
+    <string name="createAccount">Create Account</string>
+    <string name="emailHint">Email</string>
+    <string name="usernameHint">Username</string>
+    <string name="passwordHint">Password</string>
+    <string name="confirmPasswordHint">Confirm Password</string>
+    <string name="title_activity_launcher">LauncherActivity</string>
+    <string name="changing_fragments">Changing Fragments</string>
+    <string name="title_activity_create_account">CreateAccountActivity</string>
+    <string name="title_activity_parse_signup">Sign Up</string>
+    <string name="error_field_required">Error Field Required</string>
+    <string name="error_invalid_password">Error Invalid Password</string>
+    <string name="error_invalid_confirm_password">Error Invalid Confirm Password</string>
+    <string name="error_invalid_email">Error Invalid Email</string>
+    <string name="action_sign_in_short">Sign In</string>
+    <string name="action_register">Register</string>
+    <string name="prompt_password">Password</string>
+    <string name="title_activity_parse_forget_password">ParseForgetPassword</string>
+    <string name="title_activity_post_create">Post</string>
+
+    <string name="PostTitleCreate">Title</string>
+    <string name="postdescriptionhint">Share a description</string>
+    <string name="PostSaveButton">Save</string>
+</resources>
