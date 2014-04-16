@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.jhdev.lettuce.MainActivity" >
+
+    <item
+        android:title="refresh"
+        android:id="@+id/Refresh"
+        android:orderInCategory="40"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_refresh"/>
+
+</menu>

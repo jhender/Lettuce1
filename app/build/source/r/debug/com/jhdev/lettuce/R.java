@@ -61,8 +61,8 @@ public final class R {
     public static final class id {
         public static final int Login=0x7f09001f;
         public static final int Logout=0x7f090020;
-        public static final int Refresh=0x7f09001e;
-        public static final int action_settings=0x7f09001c;
+        public static final int Refresh=0x7f09001c;
+        public static final int action_settings=0x7f09001d;
         public static final int btnCreateAccount=0x7f09000a;
         public static final int btn_ForgetPass=0x7f090011;
         public static final int btn_login=0x7f09000e;
@@ -86,7 +86,7 @@ public final class R {
         public static final int saveButton1=0x7f090015;
         public static final int singleItemViewImageLayout=0x7f090017;
         public static final int singleItemViewTitleLayout=0x7f090018;
-        public static final int take_picture=0x7f09001d;
+        public static final int take_picture=0x7f09001e;
         public static final int textView1=0x7f090003;
         public static final int textView2=0x7f090019;
         public static final int textView3=0x7f09001a;
@@ -110,11 +110,12 @@ public final class R {
         public static final int singleitemview=0x7f03000d;
     }
     public static final class menu {
-        public static final int main=0x7f080000;
-        public static final int main_activity_actions=0x7f080001;
-        public static final int parse_forget_password=0x7f080002;
-        public static final int parse_login=0x7f080003;
-        public static final int parse_signup=0x7f080004;
+        public static final int gridviewfragment_menu=0x7f080000;
+        public static final int main=0x7f080001;
+        public static final int main_activity_actions=0x7f080002;
+        public static final int parse_forget_password=0x7f080003;
+        public static final int parse_login=0x7f080004;
+        public static final int parse_signup=0x7f080005;
     }
     public static final class string {
         public static final int PostSaveButton=0x7f060000;

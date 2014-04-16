@@ -151,10 +151,6 @@ public class MainActivity extends FragmentActivity implements
                 }
                 captureImage();
                 return true;
-            case R.id.Refresh:
-                //new RemoteDataTask().execute();
-                //Toast.makeText(this, "Not yet available", Toast.LENGTH_SHORT).show();
-                return true;
             case R.id.Login:
                 parseLogin();
                 return true;
