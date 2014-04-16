@@ -23,10 +23,10 @@ import android.widget.Toast;
 public class PostCreateActivity extends Activity {
 
 	private Uri fileUri;
-	private ImageView imgPreview;
+	ImageView imgPreview;
 	Button btnSave;
-	String stringTitle;
-	String stringDescription;
+	String stringTitle = null;
+	String stringDescription = null;
 	ParseFile file;
 	String imageFileName;
 	
@@ -36,14 +36,18 @@ public class PostCreateActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_post_create);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        
+
+        //1. start camera
+        //2. return data from camera
+        //3. convert data
+        //4. put into the text
+
         //Receive image from main activity
         fileUri = getIntent().getData();
     	Log.d("PostCreateAct", "getfileURIdata");
 
         imageFileName = getIntent().getStringExtra("filename");
         //Toast.makeText(PostCreateActivity.this, "Image: " + imageFileName, Toast.LENGTH_LONG).show();
-
         
         btnSave = (Button) findViewById(R.id.saveButton1);
         final EditText editTextTitle = (EditText) findViewById(R.id.editTextTitle);        
@@ -75,7 +79,7 @@ public class PostCreateActivity extends Activity {
 		bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
 		byte[] image = stream.toByteArray();
     	Log.d("PostCreateAct", "compress done");
-    	
+
 
 
 		

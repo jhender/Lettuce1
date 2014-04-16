@@ -48,7 +48,7 @@ public class GridViewFragment extends Fragment {
 
     private Uri fileUri; // file URI to store image/video
     private static GridView gridview;
-    private static List<ParseObject> ob;
+    static List<ParseObject> ob;
     private static ProgressDialog mProgressDialog;
     private static GridViewAdapter adapter;
     private static List<PhotoList> photoarraylist = null;
@@ -61,7 +61,7 @@ public class GridViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        FragmentActivity faActivity = (FragmentActivity) super.getActivity();
+        FragmentActivity faActivity = super.getActivity();
 
         fragmentView = inflater.inflate(R.layout.activity_main, container, false);
 
@@ -95,11 +95,11 @@ public class GridViewFragment extends Fragment {
         asyncTask.execute();
     }
 
-    private boolean isAsyncTaskPendingOrRunning() {
-        return this.asyncTaskWeakReference != null &&
-              this.asyncTaskWeakReference.get() != null &&
-                !this.asyncTaskWeakReference.get().getStatus().equals(AsyncTask.Status.FINISHED);
-    }
+//    private boolean isAsyncTaskPendingOrRunning() {
+//        return this.asyncTaskWeakReference != null &&
+//              this.asyncTaskWeakReference.get() != null &&
+//                !this.asyncTaskWeakReference.get().getStatus().equals(AsyncTask.Status.FINISHED);
+//    }
 
     private static class MyAsyncTask extends AsyncTask<Void, Void, Void> {
         private WeakReference<GridViewFragment> fragmentWeakReference;
@@ -133,7 +133,7 @@ public class GridViewFragment extends Fragment {
                 for (ParseObject po : ob) {
                     //retrieve objectID and Title
                     String stringTitle = (String) po.get("Title");
-                    String stringObjectID = (String) po.getObjectId();
+                    String stringObjectID = po.getObjectId();
 
                     //retrieve the image file
                     ParseFile image = (ParseFile) po.get("Photo");
@@ -203,7 +203,7 @@ public class GridViewFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         //super.onSaveInstanceState(outState);
 
-        FragmentManager manager = getFragmentManager();
+        //FragmentManager manager = getFragmentManager();
         outState.putParcelable("file_uri", fileUri);
 
         //manager.putFragment(outState, "file_uri");
@@ -330,6 +330,7 @@ public class GridViewFragment extends Fragment {
 
 
     public void uploadImage () {
+
         //code that uploads an image to Parse
 //
 //        // bitmap factory

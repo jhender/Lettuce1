@@ -174,7 +174,7 @@ public class ParseSignup extends Activity implements OnClickListener {
 		  public void done(ParseException e) {
 		    if (e == null) {
 		      signUpMsg("Account Created Successfully");
-		      Intent in = new Intent(getApplicationContext(),LettuceActivity.class);
+		      Intent in = new Intent(getApplicationContext(),MainActivity.class);
 		      startActivity(in);
 		    } else {
 		      // Sign up didn't succeed. Look at the ParseException

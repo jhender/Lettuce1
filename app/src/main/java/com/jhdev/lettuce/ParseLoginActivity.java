@@ -163,7 +163,7 @@ public class ParseLoginActivity extends Activity {
 	}
 
 	protected void loginSuccessful() {
-		Intent in =  new Intent(ParseLoginActivity.this,LettuceActivity.class);
+		Intent in =  new Intent(ParseLoginActivity.this,MainActivity.class);
 		startActivity(in);
 	}
 	protected void loginUnSuccessful() {
