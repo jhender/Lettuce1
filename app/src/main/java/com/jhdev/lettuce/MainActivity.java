@@ -145,6 +145,10 @@ public class MainActivity extends FragmentActivity implements
         switch (item.getItemId()) {
             case R.id.take_picture:
                 //TODO check for userlogged in
+                ParseUser currentUser = ParseUser.getCurrentUser();
+                if (currentUser == null) {
+                    Toast.makeText(this, "Warning: You're not logged in. Saving will crash if you don't login first.", Toast.LENGTH_SHORT).show();
+                }
                 captureImage();
                 return true;
             case R.id.Refresh:
@@ -219,12 +223,12 @@ public class MainActivity extends FragmentActivity implements
 
             } else if (resultCode == RESULT_CANCELED) {
                 // user cancelled Image capture
-                Toast.makeText(getApplicationContext(),
+                Toast.makeText(this,
                         "Image capture was cancelled", Toast.LENGTH_SHORT)
                         .show();
             } else {
                 // failed to capture image
-                Toast.makeText(getApplicationContext(),
+                Toast.makeText(this,
                         "Sorry! Failed to capture image", Toast.LENGTH_SHORT)
                         .show();
             }
