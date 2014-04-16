@@ -22,18 +22,19 @@ import android.widget.Toast;
 import com.parse.ParseUser;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 public class MainActivity extends FragmentActivity implements
-        ActionBar.TabListener {
+        ActionBar.TabListener, FollowedFragment.OnFragmentInteractionListener{
 
     private ViewPager viewPager;
     TabsPagerAdapter mAdapter;
     private ActionBar actionBar;
     // Tab titles
-    private String[] tabs = {"Browse", "Blank 2", " Blank 1"};
+    private String[] tabs = {"Browse", "Followed", "Profile"};
 
     // Camera file
     static String imageFileName;
@@ -114,10 +115,10 @@ public class MainActivity extends FragmentActivity implements
                     return new GridViewFragment();
                 case 1:
                     // Games fragment activity
-                    return new BlankFragment2();
+                    return new FollowedFragment();
                 case 2:
                     // Movies fragment activity
-                    return new BlankFragment();
+                    return new PostFragment();
             }
 
             return null;
@@ -278,6 +279,12 @@ public class MainActivity extends FragmentActivity implements
     /**
      *  ----------------END HELPER-------------------------
      **/
+
+    //interaction from
+    public void onFragmentInteraction(Uri uri){
+        Toast toast = Toast.makeText(this, "Fragment Listener!",Toast.LENGTH_SHORT); toast.show();
+    }
+
 
 
 }
