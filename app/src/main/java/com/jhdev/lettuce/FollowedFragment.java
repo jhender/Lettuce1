@@ -68,13 +68,13 @@ public class FollowedFragment extends ListFragment {
         final ParseQueryAdapter adapter1 = new ParseQueryAdapter(getActivity(), "imageUpload");
         adapter1.setTextKey("??");
 
-        //ListView listView = (ListFragment) findViewById(R.id.listview);
+        //ListView listView = (ListFragment) findViewById(android.R.id.listview);
         //ListView.setAdapter(adapter);
 
-        String[] values = new String[] {"a", "2", "3", "B"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, values);
-        setListAdapter(adapter);
+//        String[] values = new String[] {"a", "2", "3", "B"};
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+//                android.R.layout.simple_list_item_1, values);
+//        setListAdapter(adapter);
 
 
 

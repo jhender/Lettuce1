@@ -9,7 +9,7 @@ package com.jhdev.lettuce;
  * 
  */
 
-public class Post {
+public class ImageUpload {
 	
 	private String photo;
 	//should be auto //private String objectID;

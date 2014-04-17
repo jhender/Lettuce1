@@ -34,7 +34,7 @@ public class MainActivity extends FragmentActivity implements
     TabsPagerAdapter mAdapter;
     private ActionBar actionBar;
     // Tab titles
-    private String[] tabs = {"Browse", "Followed", "Profile"};
+    private String[] tabs = {"Browse", "Followed", "Post"};
 
     // Camera file
     static String imageFileName;
