@@ -1,18 +1,18 @@
 package com.jhdev.lettuce;
 
 import android.app.ActionBar;
+import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.app.ActionBar.Tab;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,7 +22,6 @@ import android.widget.Toast;
 import com.parse.ParseUser;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -34,7 +33,7 @@ public class MainActivity extends FragmentActivity implements
     TabsPagerAdapter mAdapter;
     private ActionBar actionBar;
     // Tab titles
-    private String[] tabs = {"Browse", "Followed", "Post"};
+    private String[] tabs = {"Browse", "Followed", "My Posts"};
 
     // Camera file
     static String imageFileName;

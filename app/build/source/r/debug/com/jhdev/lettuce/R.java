@@ -106,12 +106,13 @@ public final class R {
         public static final int fragment_parse_forget_password=0x7f030009;
         public static final int fragment_parse_signup=0x7f03000a;
         public static final int fragment_parselogin=0x7f03000b;
-        public static final int fragment_post=0x7f030011;
+        public static final int fragment_post=0x7f030012;
         public static final int fragment_post_grid=0x7f03000c;
         public static final int fragment_post_list=0x7f03000d;
-        public static final int gridview_item=0x7f03000e;
-        public static final int gridview_main=0x7f03000f;
-        public static final int singleitemview=0x7f030010;
+        public static final int fragment_post_list_item=0x7f03000e;
+        public static final int gridview_item=0x7f03000f;
+        public static final int gridview_main=0x7f030010;
+        public static final int singleitemview=0x7f030011;
     }
     public static final class menu {
         public static final int gridviewfragment_menu=0x7f080000;

@@ -8,14 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-
-import com.jhdev.lettuce.dummy.DummyContent;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
+import com.parse.ParseUser;
 
 /**
  * A fragment representing a list of Items.
@@ -81,12 +80,25 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
 //        mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
 //                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);
 
-        // PARSE
-        parseAdapter = new ParseQueryAdapter<ParseObject>(getActivity(), "ImageUpload");
+        // PARSE custom query
+        ParseQueryAdapter.QueryFactory<ParseObject> factory =
+              new ParseQueryAdapter.QueryFactory<ParseObject>() {
+                  public ParseQuery create() {
+                      ParseUser currentUser = ParseUser.getCurrentUser();
+
+                      ParseQuery query = new ParseQuery("ImageUpload");
+                      query.setLimit(20);
+                      query.whereEqualTo("createdBy", currentUser);
+                      query.orderByDescending("createdBy");
+                      return query;
+                  }
+              };
+
+        // PARSE run the query
+        parseAdapter = new ParseQueryAdapter<ParseObject>(getActivity(), factory);
+        //parseAdapter = new ParseQueryAdapter<ParseObject>(getActivity(), "ImageUpload");
         parseAdapter.setTextKey("Title");
         parseAdapter.setImageKey("Photo");
-
-
 
     }
 
