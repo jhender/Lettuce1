@@ -148,11 +148,11 @@ public class PostCreateActivity extends Activity {
     //TEST TODO
     void getLocation() {
         Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_HIGH);
-        criteria.setAltitudeRequired(false);
-        criteria.setBearingRequired(false);
-        criteria.setCostAllowed(true);
-        criteria.setPowerRequirement(Criteria.POWER_LOW);
+//        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+//        criteria.setAltitudeRequired(false);
+//        criteria.setBearingRequired(false);
+//        criteria.setCostAllowed(true);
+//        criteria.setPowerRequirement(Criteria.POWER_LOW);
         ParseGeoPoint.getCurrentLocationInBackground(10000, criteria, new LocationCallback() {
             @Override
             public void done(ParseGeoPoint parseGeoPoint, ParseException e) {
