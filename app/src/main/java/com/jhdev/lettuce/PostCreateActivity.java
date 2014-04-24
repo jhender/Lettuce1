@@ -1,16 +1,10 @@
 package com.jhdev.lettuce;
 
-import java.io.ByteArrayOutputStream;
-
-import com.parse.ParseFile;
-import com.parse.ParseGeoPoint;
-import com.parse.ParseObject;
-import com.parse.ParseUser;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Criteria;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +13,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.parse.LocationCallback;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+
+import java.io.ByteArrayOutputStream;
 
 public class PostCreateActivity extends Activity {
 
@@ -29,6 +32,7 @@ public class PostCreateActivity extends Activity {
 	String stringDescription = null;
 	ParseFile file;
 	String imageFileName;
+    private static ParseGeoPoint geoPoint;
 	
 	
 	@Override
@@ -89,6 +93,8 @@ public class PostCreateActivity extends Activity {
 		file.saveInBackground();
     	Log.d("PostCreateAct", "file saved");
 
+        //test TODO
+        getLocation();
 
 		btnSave.setOnClickListener(new View.OnClickListener() {	
 			@Override
@@ -118,10 +124,13 @@ public class PostCreateActivity extends Activity {
       imgupload.put("createdBy", ParseUser.getCurrentUser());
       
       //GeoPoint. Generate and save Location
+
       //TODO get real location
       ParseGeoPoint point = new ParseGeoPoint(40.0, -30.0);
 
-      imgupload.put("geoPoint", point);      
+
+
+      imgupload.put("geoPoint", geoPoint);
       
       // Create the class and the columns
       imgupload.saveInBackground();
@@ -136,5 +145,28 @@ public class PostCreateActivity extends Activity {
       finish();
 	}
 
+    //TEST TODO
+    void getLocation() {
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_HIGH);
+        criteria.setAltitudeRequired(false);
+        criteria.setBearingRequired(false);
+        criteria.setCostAllowed(true);
+        criteria.setPowerRequirement(Criteria.POWER_LOW);
+        ParseGeoPoint.getCurrentLocationInBackground(10000, criteria, new LocationCallback() {
+            @Override
+            public void done(ParseGeoPoint parseGeoPoint, ParseException e) {
+                if (e == null) {
+                    Toast.makeText(PostCreateActivity.this, "location is:" + parseGeoPoint, Toast.LENGTH_LONG).show();
+                    //geopoint = parseGeoPoint;
+                    //return parseGeoPoint;
+                    geoPoint = parseGeoPoint;
+                } else {
+                    Toast.makeText(PostCreateActivity.this, "location error", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
 
 }
