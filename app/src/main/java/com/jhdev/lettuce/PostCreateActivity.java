@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Criteria;
+//import android.location.Criteria;
+import android.location.Location;
+//import android.location.LocationListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.parse.LocationCallback;
+import com.parse.ParseACL;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
@@ -22,10 +25,37 @@ import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import java.io.ByteArrayOutputStream;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+//import com.google.android.gms.maps.CameraUpdateFactory;
+//import com.google.android.gms.maps.GoogleMap.CancelableCallback;
+//import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
+//import com.google.android.gms.maps.SupportMapFragment;
+//import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+//import com.google.android.gms.maps.model.CameraPosition;
+//import com.google.android.gms.maps.model.Circle;
+//import com.google.android.gms.maps.model.CircleOptions;
+//import com.google.android.gms.maps.model.LatLng;
+//import com.google.android.gms.maps.model.LatLngBounds;
+//import com.google.android.gms.maps.model.Marker;
+//import com.google.android.gms.maps.model.MarkerOptions;
 
-public class PostCreateActivity extends Activity {
+public class PostCreateActivity extends Activity implements LocationListener,
+    GooglePlayServicesClient.ConnectionCallbacks,
+    GooglePlayServicesClient.OnConnectionFailedListener {
 
-	Uri fileUri;
+    /**
+     * reference to
+     * https://github.com/ParsePlatform/AnyWall/blob/master/AnyWall-android/Anywall/src/com/parse/anywall/MainActivity.java
+     *
+     */
+
+
+    Uri fileUri;
 	ImageView imgPreview;
 	Button btnSave;
 	String stringTitle = null;
@@ -33,6 +63,14 @@ public class PostCreateActivity extends Activity {
 	ParseFile file;
 	String imageFileName;
     private static ParseGeoPoint geoPoint;
+    private Location lastLocation = null;
+    private Location currentLocation = null;
+
+    // A request to connect to Location Services
+    private LocationRequest locationRequest;
+
+    // Stores the current instantiation of the location client in this object
+    private LocationClient locationClient;
 	
 	
 	@Override
@@ -48,6 +86,15 @@ public class PostCreateActivity extends Activity {
 
         //start retrieving location
         getLocation();
+
+        Location myLoc = (currentLocation == null) ? lastLocation : currentLocation;
+        if (myLoc == null) {
+            Toast.makeText(PostCreateActivity.this,
+                    "Please try again after your location appears on the map.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        final ParseGeoPoint myPoint = geoPointFromLocation(myLoc);
+
 
         //Receive image from main activity
         fileUri = getIntent().getData();
@@ -111,35 +158,52 @@ public class PostCreateActivity extends Activity {
 	private void savePost(){
 
       // Create a New Class called "Photo" in Parse
-      ParseObject imgupload = new ParseObject("ImageUpload");
+      ParseObject po = new ParseObject("Post");
 
       // Create a column named "ImageName" and set the string          
-      imgupload.put("ImageName", imageFileName);
+      po.put("imageName", imageFileName);
 
       // Create a column named "ImageFile" and insert the image
-      imgupload.put("Photo", file);
+      po.put("photo", file);
 
-      imgupload.put("Title", stringTitle);
-      imgupload.put("Description", stringDescription);
+      po.put("title", stringTitle);
+      po.put("description", stringDescription);
         
       //set user who created this. TODO add check that user is logged in.
-      imgupload.put("createdBy", ParseUser.getCurrentUser());
-      
+      po.put("createdBy", ParseUser.getCurrentUser());
+
+      po.put("status", "active");
+
       //GeoPoint. Generate and save Location
 
       // Saves location. TODO Need to catch errors when location not retrieved.
-      imgupload.put("geoPoint", geoPoint);
+      po.put("location", geoPoint);
       // Saves fake location when no geopoint is retrieved.
       if (geoPoint == null){
           ParseGeoPoint point = new ParseGeoPoint(1.0, 1.01);
-          imgupload.put("geoPoint", point);
+          po.put("geoPoint", point);
       }
-      
+
+        //set access control to READ ONLY for public
+        ParseACL acl = new ParseACL();
+        acl.setPublicReadAccess(true);
+        po.setACL(acl);
+
+
       // Create the class and the columns
-      imgupload.saveInBackground();
+      po.saveInBackground();
+
+
+//        post.saveInBackground(new SaveCallback() {
+//            @Override
+//            public void done(ParseException e) {
+//                // Update the display
+//            }
+//        });
+
 
       // Show a simple toast message   
-      Toast.makeText(PostCreateActivity.this, "Image Uploaded",
+      Toast.makeText(PostCreateActivity.this, "Image Uploaded to Post",
               Toast.LENGTH_SHORT).show();
       
       Intent returnIntent = new Intent();
@@ -147,6 +211,35 @@ public class PostCreateActivity extends Activity {
       setResult(RESULT_OK,returnIntent);     
       finish();
 	}
+
+    private ParseGeoPoint geoPointFromLocation(Location loc) {
+        return new ParseGeoPoint(loc.getLatitude(), loc.getLongitude());
+    }
+
+    /*
+ * Report location updates to the UI.
+ */
+    public void onLocationChanged(Location location) {
+        currentLocation = location;
+        if (lastLocation != null
+                && geoPointFromLocation(location)
+                .distanceInKilometersTo(geoPointFromLocation(lastLocation)) < 0.01) {
+            // If the location hasn't changed by more than 10 meters, ignore it.
+            return;
+        }
+        lastLocation = location;
+        LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+        if (!hasSetUpInitialLocation) {
+            // Zoom to the current location.
+            updateZoom(myLatLng);
+            hasSetUpInitialLocation = true;
+        }
+        // Update map radius indicator
+        updateCircle(myLatLng);
+        doMapQuery();
+        doListQuery();
+    }
+
 
     //TEST TODO
     void getLocation() {
