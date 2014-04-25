@@ -25,7 +25,7 @@ import java.io.ByteArrayOutputStream;
 
 public class PostCreateActivity extends Activity {
 
-	private Uri fileUri;
+	Uri fileUri;
 	ImageView imgPreview;
 	Button btnSave;
 	String stringTitle = null;
@@ -45,6 +45,9 @@ public class PostCreateActivity extends Activity {
         //2. return data from camera
         //3. convert data
         //4. put into the text
+
+        //start retrieving location
+        getLocation();
 
         //Receive image from main activity
         fileUri = getIntent().getData();
@@ -93,8 +96,7 @@ public class PostCreateActivity extends Activity {
 		file.saveInBackground();
     	Log.d("PostCreateAct", "file saved");
 
-        //test TODO
-        getLocation();
+
 
 		btnSave.setOnClickListener(new View.OnClickListener() {	
 			@Override
@@ -125,12 +127,13 @@ public class PostCreateActivity extends Activity {
       
       //GeoPoint. Generate and save Location
 
-      //TODO get real location
-      ParseGeoPoint point = new ParseGeoPoint(40.0, -30.0);
-
-
-
+      // Saves location. TODO Need to catch errors when location not retrieved.
       imgupload.put("geoPoint", geoPoint);
+      // Saves fake location when no geopoint is retrieved.
+      if (geoPoint == null){
+          ParseGeoPoint point = new ParseGeoPoint(1.0, 1.01);
+          imgupload.put("geoPoint", point);
+      }
       
       // Create the class and the columns
       imgupload.saveInBackground();
@@ -147,19 +150,23 @@ public class PostCreateActivity extends Activity {
 
     //TEST TODO
     void getLocation() {
-        Criteria criteria = new Criteria();
-//        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+//        Criteria criteria = new Criteria();
+//        criteria.setAccuracy(Criteria.ACCURACY_LOW);
 //        criteria.setAltitudeRequired(false);
 //        criteria.setBearingRequired(false);
 //        criteria.setCostAllowed(true);
 //        criteria.setPowerRequirement(Criteria.POWER_LOW);
-        ParseGeoPoint.getCurrentLocationInBackground(10000, criteria, new LocationCallback() {
+
+        /*
+        This seems to work with Coarse Location in the Manifest. But throws error location timeout when fine location is selected.
+        Coarse Location is very far off. Way too inaccurate for saving locations. Probably can work for finding nearby items.
+         */
+        ParseGeoPoint.getCurrentLocationInBackground(10000, new LocationCallback() {
             @Override
             public void done(ParseGeoPoint parseGeoPoint, ParseException e) {
+
                 if (e == null) {
                     Toast.makeText(PostCreateActivity.this, "location is:" + parseGeoPoint, Toast.LENGTH_LONG).show();
-                    //geopoint = parseGeoPoint;
-                    //return parseGeoPoint;
                     geoPoint = parseGeoPoint;
                 } else {
                     Toast.makeText(PostCreateActivity.this, "location error", Toast.LENGTH_LONG).show();

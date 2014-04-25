@@ -110,7 +110,7 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
         //((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
-        ((AdapterView<ListAdapter>) mListView).setAdapter(parseAdapter);
+        mListView.setAdapter(parseAdapter);
 
         //TextView text1 = (TextView) view.findViewById(android.R.id.text1);
         //text1.setText();

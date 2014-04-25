@@ -1,5 +1,7 @@
 package com.jhdev.lettuce;
 
+import com.parse.ParseGeoPoint;
+
 /**
  * 
  * This is the main item type that is created by the user. 
@@ -33,4 +35,6 @@ public class ImageUpload {
 	public void setTitle(String title){
 		this.title = title;
 	}
+
+
 }
