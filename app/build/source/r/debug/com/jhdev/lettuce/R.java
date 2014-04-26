@@ -252,10 +252,10 @@ containing a value of this type.
         public static final int tab_unselected_pressed_orange=0x7f020042;
     }
     public static final class id {
-        public static final int Login=0x7f050025;
-        public static final int Logout=0x7f050026;
-        public static final int Refresh=0x7f050022;
-        public static final int action_settings=0x7f050023;
+        public static final int Login=0x7f050026;
+        public static final int Logout=0x7f050027;
+        public static final int Refresh=0x7f050023;
+        public static final int action_settings=0x7f050024;
         public static final int btnCreateAccount=0x7f05000f;
         public static final int btn_ForgetPass=0x7f050016;
         public static final int btn_login=0x7f050013;
@@ -271,6 +271,7 @@ containing a value of this type.
         public static final int et_forgetpassword=0x7f050009;
         public static final int gridview=0x7f050006;
         public static final int hybrid=0x7f050004;
+        public static final int imageView=0x7f05001d;
         public static final int imgPreview=0x7f050018;
         public static final int login=0x7f050012;
         public static final int none=0x7f050000;
@@ -278,17 +279,17 @@ containing a value of this type.
         public static final int orTV=0x7f050014;
         public static final int pager=0x7f050007;
         public static final int password=0x7f050011;
-        public static final int photo=0x7f05001d;
+        public static final int photo=0x7f05001e;
         public static final int satellite=0x7f050002;
         public static final int saveButton1=0x7f05001a;
-        public static final int singleItemViewImageLayout=0x7f05001e;
-        public static final int singleItemViewTitleLayout=0x7f05001f;
-        public static final int take_picture=0x7f050024;
+        public static final int singleItemViewImageLayout=0x7f05001f;
+        public static final int singleItemViewTitleLayout=0x7f050020;
+        public static final int take_picture=0x7f050025;
         public static final int terrain=0x7f050003;
         public static final int textView=0x7f05001b;
         public static final int textView1=0x7f050008;
-        public static final int textView2=0x7f050020;
-        public static final int textView3=0x7f050021;
+        public static final int textView2=0x7f050021;
+        public static final int textView3=0x7f050022;
         public static final int textViewLocation=0x7f05001c;
         public static final int username=0x7f050010;
     }

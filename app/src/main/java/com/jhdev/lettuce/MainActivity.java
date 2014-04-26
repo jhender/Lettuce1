@@ -2,12 +2,16 @@ package com.jhdev.lettuce;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.IntentSender;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +23,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.LocationClient;
 import com.parse.ParseUser;
 
 import java.io.File;
@@ -27,7 +35,9 @@ import java.util.Date;
 import java.util.Locale;
 
 public class MainActivity extends FragmentActivity implements
-        ActionBar.TabListener, FollowedFragment.OnFragmentInteractionListener{
+        ActionBar.TabListener, FollowedFragment.OnFragmentInteractionListener,
+        GooglePlayServicesClient.ConnectionCallbacks,
+        GooglePlayServicesClient.OnConnectionFailedListener {
 
     private ViewPager viewPager;
     TabsPagerAdapter mAdapter;
@@ -43,6 +53,16 @@ public class MainActivity extends FragmentActivity implements
     private static final String IMAGE_DIRECTORY_NAME = "Lettuce";
     // file URI to store image/video
     private Uri fileUri;
+
+    // Global constants
+    /*
+     * Define a request code to send to Google Play services
+     * This code is returned in Activity.onActivityResult
+     */
+    private final static int
+            CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    LocationClient mLocationClient;
+    Location mCurrentLocation;
 
 
     @Override
@@ -65,6 +85,14 @@ public class MainActivity extends FragmentActivity implements
                     .setTabListener(this));
         }
 
+        /*
+         * Create a new location client, using the enclosing class to
+         * handle callbacks.
+         */
+        mLocationClient = new LocationClient(this, this, this);
+
+
+
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
@@ -82,6 +110,11 @@ public class MainActivity extends FragmentActivity implements
             public void onPageScrollStateChanged(int arg0) {
             }
         });
+
+//        mCurrentLocation = mLocationClient.getLastLocation();
+//
+//        Toast.makeText(this, "Your location issss " + mCurrentLocation, Toast.LENGTH_LONG).show();
+
     }
 
     @Override
@@ -284,6 +317,132 @@ public class MainActivity extends FragmentActivity implements
         Toast toast = Toast.makeText(this, "Fragment Listener!",Toast.LENGTH_SHORT); toast.show();
     }
 
+
+    /**
+     *  LOCATION STUFF
+     */
+
+    // Define a DialogFragment that displays the error dialog
+    public static class ErrorDialogFragment extends DialogFragment {
+        // Global field to contain the error dialog
+        private Dialog mDialog;
+        // Default constructor. Sets the dialog field to null
+        public ErrorDialogFragment() {
+            super();
+            mDialog = null;
+        }
+        // Set the dialog to display
+        public void setDialog(Dialog dialog) {
+            mDialog = dialog;
+        }
+        // Return a Dialog to the DialogFragment.
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return mDialog;
+        }
+    }
+
+    private boolean servicesConnected() {
+        // Check that Google Play services is available
+        int resultCode =
+                GooglePlayServicesUtil.
+                        isGooglePlayServicesAvailable(this);
+        // If Google Play services is available
+        if (ConnectionResult.SUCCESS == resultCode) {
+            // In debug mode, log the status
+            Log.d("Location Updates",
+                    "Google Play services is available.");
+            // Continue
+            return true;
+            // Google Play services was not available for some reason
+        } else {
+            GooglePlayServicesUtil.getErrorDialog(resultCode, this, 0).show();
+            return true;
+        }
+    }
+
+    /*
+ * Called by Location Services when the request to connect the
+ * client finishes successfully. At this point, you can
+ * request the current location or start periodic updates
+ */
+    @Override
+    public void onConnected(Bundle dataBundle) {
+        // Display the connection status
+        Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
+
+        mCurrentLocation = mLocationClient.getLastLocation();
+
+        Toast.makeText(this, "Your location issss " + mCurrentLocation, Toast.LENGTH_LONG).show();
+
+
+    }
+
+    /*
+     * Called by Location Services if the connection to the
+     * location client drops because of an error.
+     */
+    @Override
+    public void onDisconnected() {
+        // Display the connection status
+        Toast.makeText(this, "Disconnected. Please re-connect.",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    /*
+     * Called by Location Services if the attempt to
+     * Location Services fails.
+     */
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        /*
+         * Google Play services can resolve some errors it detects.
+         * If the error has a resolution, try sending an Intent to
+         * start a Google Play services activity that can resolve
+         * error.
+         */
+        if (connectionResult.hasResolution()) {
+            try {
+                // Start an Activity that tries to resolve the error
+                connectionResult.startResolutionForResult(
+                        this,
+                        CONNECTION_FAILURE_RESOLUTION_REQUEST);
+                /*
+                 * Thrown if Google Play services canceled the original
+                 * PendingIntent
+                 */
+            } catch (IntentSender.SendIntentException e) {
+                // Log the error
+                e.printStackTrace();
+            }
+        } else {
+            /*
+             * If no resolution is available, display a dialog to the
+             * user with the error.
+             */
+            //showErrorDialog(connectionResult.getErrorCode());
+        }
+    }
+
+    /*
+ * Called when the Activity becomes visible.
+ */
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Connect the client.
+        mLocationClient.connect();
+    }
+
+    /*
+     * Called when the Activity is no longer visible.
+     */
+    @Override
+    protected void onStop() {
+        // Disconnecting the client invalidates it.
+        mLocationClient.disconnect();
+        super.onStop();
+    }
 
 
 }

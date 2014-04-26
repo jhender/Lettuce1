@@ -100,20 +100,21 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
         parseAdapter.setTextKey("Title");
         parseAdapter.setImageKey("Photo");
 
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_post, container, false);
+        View view = inflater.inflate(R.layout.fragment_post_list, container, false);
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
         //((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
         mListView.setAdapter(parseAdapter);
 
-        //TextView text1 = (TextView) view.findViewById(android.R.id.text1);
-        //text1.setText();
+//        TextView textView = (TextView) view.findViewById(R.id.textView);
+//        textView.setText(parseAdapter.);
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
