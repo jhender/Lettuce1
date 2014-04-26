@@ -86,7 +86,7 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
                   public ParseQuery create() {
                       ParseUser currentUser = ParseUser.getCurrentUser();
 
-                      ParseQuery query = new ParseQuery("ImageUpload");
+                      ParseQuery query = new ParseQuery("Post");
                       query.setLimit(20);
                       query.whereEqualTo("createdBy", currentUser);
                       query.orderByDescending("createdBy");
