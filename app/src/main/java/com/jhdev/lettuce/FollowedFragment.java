@@ -8,11 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
-import android.widget.ListView;
 
 import com.parse.ParseQueryAdapter;
-
-import java.util.List;
 
 
 /**
@@ -66,6 +63,9 @@ public class FollowedFragment extends ListFragment {
         // Required empty public constructor
     }
 
+
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +74,7 @@ public class FollowedFragment extends ListFragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        ListView listView = (ListFragment) View.findViewById(android.R.id.list);
+//        ListView listView = (ListFragment) View.findViewById(android.R.id.list);
         //ListView.setAdapter(adapter);
 
 //        String[] values = new String[] {"a", "2", "3", "B"};
@@ -84,7 +84,7 @@ public class FollowedFragment extends ListFragment {
 
        // mLocationClient = new LocationClient(getActivity(), this, this);
 
-        listView.setListAdapter(nearbyAdapter);
+//        listView.setListAdapter(nearbyAdapter);
 
     }
 

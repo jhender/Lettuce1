@@ -1,6 +1,7 @@
 package com.jhdev.lettuce;
 
 import com.parse.ParseClassName;
+import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -18,17 +19,22 @@ public class Post extends ParseObject {
     private String coordinates;
     private String rating;
 
-    public String getPhoto() {
-        return photo;
+    public Post () {
+        // A default constructor is required
     }
 
-    public void setPhoto(String photo) {
+    public ParseFile getPhoto() {
+
+        return getParseFile("photo");
+    }
+
+    public void setPhoto(ParseFile file) {
         //this.photo = photo;
-        put("photo", photo);
+        put("photo", file);
     }
 
     public String getTitle() {
-        return title;
+        return getString("title");
     }
 
     public void setTitle(String value) {

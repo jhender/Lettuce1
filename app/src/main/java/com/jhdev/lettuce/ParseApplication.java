@@ -1,14 +1,22 @@
 package com.jhdev.lettuce;
 
+import android.app.Application;
+
 import com.parse.Parse;
 import com.parse.ParseACL;
-import android.app.Application;
+import com.parse.ParseObject;
 
 public class ParseApplication extends Application {
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
+
+        /*
+		 * In this tutorial, we'll subclass ParseObject for convenience to
+		 * create and modify Meal objects
+		 */
+        ParseObject.registerSubclass(Post.class);
 
 		// Add your initialization code here
 	    Parse.initialize(this, "H43u08age9NuU2KuJ2O4lBnEFeCaD7IPu8Tav5WF", "RL5XW3UOfAoecHdWIgQjG27wEp5mwB0gmfhum9to");
@@ -22,6 +30,8 @@ public class ParseApplication extends Application {
 		defaultACL.setPublicReadAccess(true);
 		
 		ParseACL.setDefaultACL(defaultACL, true);
+
+
 	}
 	
 	

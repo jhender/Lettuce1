@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.parse.ParseQueryAdapter;
@@ -38,7 +39,7 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
     /**
      * The fragment's ListView/GridView.
      */
-    private AbsListView mListView;
+    private ListView mListView;
 
     /**
      * The Adapter which will be used to populate the ListView/GridView with
@@ -74,7 +75,7 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-
+        nearbyAdapter = new CustomParseQueryAdapter(getActivity());
 
     }
 
@@ -84,11 +85,23 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
         View view = inflater.inflate(R.layout.fragment_post_list, container, false);
 
         // Set the adapter
-        mListView = (AbsListView) view.findViewById(android.R.id.list);
-        //((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
-        mListView.setAdapter(parseAdapter);
+        //mListView = (AbsListView) view.findViewById(android.R.id.list);
+        //((AdapterView<ListAdapter>) mListView).setAdapter(nearbyAdapter);
+//        mListView.setAdapter(nearbyAdapter);
 
         //parseAdapter.loadObjects();
+
+        mListView = (ListView) view.findViewById(android.R.id.list);
+
+        nearbyAdapter.loadObjects();
+//
+        mListView.setAdapter(nearbyAdapter);
+
+//        ParseQueryAdapter<Post> adapter = new ParseQueryAdapter<Post>(getActivity(), Post.class);
+//        adapter.setTextKey("title");
+//        adapter.setImageKey("photo");
+//        mListView.setAdapter(adapter);
+
 
 //        TextView textView = (TextView) view.findViewById(R.id.textView);
 //        textView.setText(parseAdapter.);
