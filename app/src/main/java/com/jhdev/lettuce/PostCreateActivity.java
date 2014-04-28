@@ -23,10 +23,8 @@ import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationRequest;
-import com.parse.ParseACL;
 import com.parse.ParseFile;
 import com.parse.ParseGeoPoint;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import java.io.ByteArrayOutputStream;
@@ -58,7 +56,8 @@ public class PostCreateActivity extends Activity implements
     // Stores the current instantiation of the location client in this object
     LocationClient mLocationClient;
     Location mCurrentLocation;
-	
+
+    private Post post;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -137,43 +136,48 @@ public class PostCreateActivity extends Activity implements
 	}
 	
 	private void savePost(){
-
-      // Create a New Class called "Photo" in Parse
-      ParseObject po = new ParseObject("Post");
-
-      // Create a column named "ImageName" and set the string          
-      po.put("imageName", imageFileName);
+        post = new Post();
+//      // Create a New Class called "Photo" in Parse
+//      ParseObject po = new ParseObject("Post");
+//
+//      // Create a column named "ImageName" and set the string
+//      po.put("imageName", imageFileName);
 
       // Create a column named "ImageFile" and insert the image
-      po.put("photo", file);
+      //x po.put("photo", file);
+        post.setTitle(stringTitle);
+        post.setLocation(geoPoint);
+        post.setUser(ParseUser.getCurrentUser());
+        post.setPhoto(file);
+        post.saveInBackground();
 
-      po.put("title", stringTitle);
-      po.put("description", stringDescription);
-        
-      //set user who created this. TODO add check that user is logged in.
-      po.put("createdBy", ParseUser.getCurrentUser());
-
-      po.put("status", "active");
+//      po.put("title", stringTitle);
+//      po.put("description", stringDescription);
+//
+//      //set user who created this. TODO add check that user is logged in.
+//      po.put("createdBy", ParseUser.getCurrentUser());
+//
+//      po.put("status", "active");
 
       //GeoPoint. Generate and save Location
 
 
-      // Saves fake location when no geopoint is retrieved.
-      if (geoPoint == null){
-          geoPoint = new ParseGeoPoint(1.0, 1.01);
-          //po.put("location", point);
-      }
-        // Saves location. TODO Need to catch errors when location not retrieved.
-        po.put("location", geoPoint);
+//      // Saves fake location when no geopoint is retrieved.
+//      if (geoPoint == null){
+//          geoPoint = new ParseGeoPoint(1.0, 1.01);
+//          //po.put("location", point);
+//      }
+//        // Saves location. TODO Need to catch errors when location not retrieved.
+//        po.put("location", geoPoint);
+//
+//        //set access control to READ ONLY for public
+//        ParseACL acl = new ParseACL();
+//        acl.setPublicReadAccess(true);
+//        po.setACL(acl);
 
-        //set access control to READ ONLY for public
-        ParseACL acl = new ParseACL();
-        acl.setPublicReadAccess(true);
-        po.setACL(acl);
-
-
-      // Create the class and the columns
-      po.saveInBackground();
+//
+//      // Create the class and the columns
+//      po.saveInBackground();
 
 
 //        post.saveInBackground(new SaveCallback() {

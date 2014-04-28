@@ -12,6 +12,7 @@ import com.parse.ParseFile;
 import com.parse.ParseImageView;
 import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
+import com.parse.ParseUser;
 
 public class CustomParseQueryAdapter extends ParseQueryAdapter<Post> {
 
@@ -19,9 +20,15 @@ public class CustomParseQueryAdapter extends ParseQueryAdapter<Post> {
         super(context, new ParseQueryAdapter.QueryFactory<Post>() {
             public ParseQuery<Post> create() {
                 // Here we can configure a ParseQuery to display
-                // only top-rated meals.
-                ParseQuery query = new ParseQuery("Post");
+                // only self and nearby Posts.
 
+                //Get current user
+                ParseUser currentUser = ParseUser.getCurrentUser();
+
+                ParseQuery query = new ParseQuery("Post");
+                query.setLimit(20);
+                query.whereEqualTo("createdBy", currentUser);
+                query.orderByDescending("createdBy");
                 return query;
             }
         });

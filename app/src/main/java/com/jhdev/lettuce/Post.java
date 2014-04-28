@@ -42,11 +42,11 @@ public class Post extends ParseObject {
     }
 
     public ParseUser getUser() {
-        return getParseUser("user");
+        return getParseUser("createdBy");
     }
 
     public void setUser(ParseUser value){
-        put("user", value);
+        put("createdBy", value);
     }
 
     public void setLocation(ParseGeoPoint value) {
