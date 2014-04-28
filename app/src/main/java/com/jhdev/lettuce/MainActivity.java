@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Dialog;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
@@ -59,10 +60,11 @@ public class MainActivity extends FragmentActivity implements
      * Define a request code to send to Google Play services
      * This code is returned in Activity.onActivityResult
      */
-    private final static int
-            CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     LocationClient mLocationClient;
     Location mCurrentLocation;
+    // Context so that Fragments can call Activity's LocationClient
+    public static Context c;
 
 
     @Override
@@ -91,7 +93,7 @@ public class MainActivity extends FragmentActivity implements
          */
         mLocationClient = new LocationClient(this, this, this);
 
-
+        c = this;
 
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 

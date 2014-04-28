@@ -7,8 +7,12 @@ import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import com.parse.ParseQueryAdapter;
+
+import java.util.List;
 
 
 /**
@@ -31,6 +35,14 @@ public class FollowedFragment extends ListFragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    /**
+     * The Adapter which will be used to populate the ListView/GridView with
+     * Views.
+     */
+    private ListAdapter mAdapter;
+    private ParseQueryAdapter<Post> parseAdapter;
+    private CustomParseQueryAdapter nearbyAdapter;
 
     /**
      * Use this factory method to create a new instance of
@@ -62,11 +74,7 @@ public class FollowedFragment extends ListFragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        //Parse
-        final ParseQueryAdapter adapter1 = new ParseQueryAdapter(getActivity(), "imageUpload");
-        adapter1.setTextKey("??");
-
-        //ListView listView = (ListFragment) findViewById(android.R.id.listview);
+        ListView listView = (ListFragment) View.findViewById(android.R.id.list);
         //ListView.setAdapter(adapter);
 
 //        String[] values = new String[] {"a", "2", "3", "B"};
@@ -74,7 +82,9 @@ public class FollowedFragment extends ListFragment {
 //                android.R.layout.simple_list_item_1, values);
 //        setListAdapter(adapter);
 
+       // mLocationClient = new LocationClient(getActivity(), this, this);
 
+        listView.setListAdapter(nearbyAdapter);
 
     }
 

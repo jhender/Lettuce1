@@ -11,10 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
-import com.parse.ParseUser;
 
 /**
  * A fragment representing a list of Items.
@@ -48,7 +45,8 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
      * Views.
      */
     private ListAdapter mAdapter;
-    private ParseQueryAdapter parseAdapter;
+    private ParseQueryAdapter<Post> parseAdapter;
+    private CustomParseQueryAdapter nearbyAdapter;
 
     // TODO: Rename and change types of parameters
     public static PostFragment newInstance(String param1, String param2) {
@@ -76,29 +74,6 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        // TODO: Change Adapter to display your content
-//        mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-//                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);
-
-        // PARSE custom query
-        ParseQueryAdapter.QueryFactory<ParseObject> factory =
-              new ParseQueryAdapter.QueryFactory<ParseObject>() {
-                  public ParseQuery create() {
-                      ParseUser currentUser = ParseUser.getCurrentUser();
-
-                      ParseQuery query = new ParseQuery("Post");
-                      query.setLimit(20);
-                      query.whereEqualTo("createdBy", currentUser);
-                      query.orderByDescending("createdBy");
-                      return query;
-                  }
-              };
-
-        // PARSE run the query
-        parseAdapter = new ParseQueryAdapter<ParseObject>(getActivity(), factory);
-        //parseAdapter = new ParseQueryAdapter<ParseObject>(getActivity(), "ImageUpload");
-        parseAdapter.setTextKey("Title");
-        parseAdapter.setImageKey("Photo");
 
 
     }
@@ -113,8 +88,13 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
         //((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
         mListView.setAdapter(parseAdapter);
 
+        //parseAdapter.loadObjects();
+
 //        TextView textView = (TextView) view.findViewById(R.id.textView);
 //        textView.setText(parseAdapter.);
+
+//        mListView.setAdapter(nearbyAdapter);
+//        nearbyAdapter.loadObjects();
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
