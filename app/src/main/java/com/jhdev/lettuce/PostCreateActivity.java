@@ -36,6 +36,7 @@ public class PostCreateActivity extends Activity implements
     /**
      * reference to
      * https://github.com/ParsePlatform/AnyWall/blob/master/AnyWall-android/Anywall/src/com/parse/anywall/MainActivity.java
+     * and also Mealspotting
      */
 
     Uri fileUri;
@@ -57,7 +58,7 @@ public class PostCreateActivity extends Activity implements
     LocationClient mLocationClient;
     Location mCurrentLocation;
 
-    private Post post;
+    Post post;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,9 +73,6 @@ public class PostCreateActivity extends Activity implements
         //3. convert data
         //4. put into the text
 
-        // start retrieving location
-        //getLocation();
-
         //Receive image from main activity
         fileUri = getIntent().getData();
     	Log.d("PostCreateAct", "getfileURIdata");
@@ -87,7 +85,7 @@ public class PostCreateActivity extends Activity implements
         final EditText editTextDescription = (EditText) findViewById(R.id.editTextDescription);
         textViewLocation = (TextView) findViewById(R.id.textViewLocation);
         
-		//code that uploads an image to Parse immediately.
+		//code that uploads an image to Parse immediately to reduce savingtime.
         //if user presses back or cancels, file is still on server but not linked to a imageUpload.
     	
         // bitmap factory
@@ -100,12 +98,12 @@ public class PostCreateActivity extends Activity implements
         //http://developer.android.com/training/displaying-bitmaps/load-bitmap.html
         
         Bitmap bitmap = BitmapFactory.decodeFile(fileUri.getPath(), options);
-    	Log.d("PostCreateAct", "decodeFiledone");
+    	Log.d("PostCreateAct", "decode File Done");
         
         //Set image into the preview box
         imgPreview = (ImageView) findViewById(R.id.imgPreview);
         imgPreview.setImageBitmap(bitmap);
-    	Log.d("PostCreateAct", "getImagepreview");
+    	Log.d("PostCreateAct", "get Image Preview");
     	
 		// Convert it to byte
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -114,15 +112,12 @@ public class PostCreateActivity extends Activity implements
 		byte[] image = stream.toByteArray();
     	Log.d("PostCreateAct", "compress done");
 
-
-
 		
 		// Create the ParseFile
 		file = new ParseFile(imageFileName, image);
 		// Upload the image into Parse Cloud
 		file.saveInBackground();
     	Log.d("PostCreateAct", "file saved");
-
 
 
 		btnSave.setOnClickListener(new View.OnClickListener() {	
@@ -136,106 +131,31 @@ public class PostCreateActivity extends Activity implements
 	}
 	
 	private void savePost(){
-        post = new Post();
-//      // Create a New Class called "Photo" in Parse
-//      ParseObject po = new ParseObject("Post");
-//
-//      // Create a column named "ImageName" and set the string
-//      po.put("imageName", imageFileName);
 
-      // Create a column named "ImageFile" and insert the image
-      //x po.put("photo", file);
+        post = new Post();
+
+        //set values into post object
         post.setTitle(stringTitle);
+        post.setDescription(stringDescription);
         post.setLocation(geoPoint);
         post.setUser(ParseUser.getCurrentUser());
         post.setPhoto(file);
         post.saveInBackground();
+        //get save callback?
 
-//      po.put("title", stringTitle);
-//      po.put("description", stringDescription);
-//
-//      //set user who created this. TODO add check that user is logged in.
-//      po.put("createdBy", ParseUser.getCurrentUser());
-//
-//      po.put("status", "active");
-
-      //GeoPoint. Generate and save Location
-
-
-//      // Saves fake location when no geopoint is retrieved.
-//      if (geoPoint == null){
-//          geoPoint = new ParseGeoPoint(1.0, 1.01);
-//          //po.put("location", point);
-//      }
-//        // Saves location. TODO Need to catch errors when location not retrieved.
-//        po.put("location", geoPoint);
-//
-//        //set access control to READ ONLY for public
-//        ParseACL acl = new ParseACL();
-//        acl.setPublicReadAccess(true);
-//        po.setACL(acl);
-
-//
-//      // Create the class and the columns
-//      po.saveInBackground();
-
-
-//        post.saveInBackground(new SaveCallback() {
-//            @Override
-//            public void done(ParseException e) {
-//                // Update the display
-//            }
-//        });
-
-
-      // Show a simple toast message   
-      Toast.makeText(PostCreateActivity.this, "Image Uploaded to Post",
+        // Show a simple toast message
+        Toast.makeText(PostCreateActivity.this, "Image Uploaded to Post",
               Toast.LENGTH_SHORT).show();
-      
-      Intent returnIntent = new Intent();
-      //returnIntent.putExtra("result",result);
-      setResult(RESULT_OK,returnIntent);     
-      finish();
+
+        Intent returnIntent = new Intent();
+        //returnIntent.putExtra("result",result);
+        setResult(RESULT_OK,returnIntent);
+        finish();
 	}
 
-    private ParseGeoPoint geoPointFromLocation(Location loc) {
-        return new ParseGeoPoint(loc.getLatitude(), loc.getLongitude());
-    }
-
-
-
-
-//    //TEST
-//    void getLocation() {
-//        Criteria criteria = new Criteria();
-//        criteria.setAccuracy(Criteria.ACCURACY_LOW);
-//        criteria.setAltitudeRequired(false);
-//        criteria.setBearingRequired(false);
-//        criteria.setCostAllowed(true);
-//        criteria.setPowerRequirement(Criteria.POWER_LOW);
-//
-//        /*
-//        This seems to work with Coarse Location in the Manifest. But throws error location timeout when fine location is selected.
-//        Coarse Location is very far off. Way too inaccurate for saving locations. Probably can work for finding nearby items.
-//         */
-//        ParseGeoPoint.getCurrentLocationInBackground(20000, criteria, new LocationCallback() {
-//            @Override
-//            public void done(ParseGeoPoint parseGeoPoint, ParseException e) {
-//
-//                if (e == null) {
-//                    Toast.makeText(PostCreateActivity.this, "location is:" + parseGeoPoint, Toast.LENGTH_LONG).show();
-//                    geoPoint = parseGeoPoint;
-//                    textViewLocation.setText("location found");
-//                } else {
-//                    Toast.makeText(PostCreateActivity.this, "location error", Toast.LENGTH_LONG).show();
-//                    e.printStackTrace();
-//                    textViewLocation.setText("location error not found");
-//                }
-//            }
-//        });
+//    private ParseGeoPoint geoPointFromLocation(Location loc) {
+//        return new ParseGeoPoint(loc.getLatitude(), loc.getLongitude());
 //    }
-
-
 
     /**
      *  ***********************************************************************
@@ -370,8 +290,6 @@ public class PostCreateActivity extends Activity implements
         mLocationClient.disconnect();
         super.onStop();
     }
-
-
 
 
 }

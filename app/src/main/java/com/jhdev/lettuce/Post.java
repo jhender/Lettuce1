@@ -7,9 +7,6 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
-/**
- * Created by jianhui.ho on 4/25/2014.
- */
 @ParseClassName("Post")
 public class Post extends ParseObject {
 
@@ -61,6 +58,17 @@ public class Post extends ParseObject {
         return ParseQuery.getQuery(Post.class);
     }
 
+    public String getDescription() {
+        return getString("description");
+    }
+
+    public void setDescription(String value) {
+        put("description", value);
+    }
+
+    public void setStatus(String value) {
+        put("status", value);
+    }
 }
 
 
