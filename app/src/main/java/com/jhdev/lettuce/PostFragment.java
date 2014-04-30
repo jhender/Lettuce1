@@ -1,6 +1,7 @@
 package com.jhdev.lettuce;
 
 import android.app.Activity;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,7 +13,17 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.Marker;
 import com.parse.ParseQueryAdapter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A fragment representing a list of Items.
@@ -48,6 +59,37 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
     private ListAdapter mAdapter;
     private ParseQueryAdapter<Post> parseAdapter;
     private CustomParseQueryAdapter nearbyAdapter;
+
+    /*
+     * For the map fragment
+     */
+
+    // Map fragment
+    SupportMapFragment map;
+
+    // Represents the circle around a map
+    private Circle mapCircle;
+
+    // Fields for the map radius in feet
+    private float radius;
+    private float lastRadius;
+    // Fields for helping process map and location changes
+    private final Map<String, Marker> mapMarkers = new HashMap<String, Marker>();
+    private int mostRecentMapUpdate = 0;
+    private boolean hasSetUpInitialLocation = false;
+    private String selectedObjectId;
+    private Location lastLocation = null;
+    private Location currentLocation = null;
+    // A request to connect to Location Services
+    private LocationRequest locationRequest;
+
+    // Stores the current instantiation of the location client in this object
+    private LocationClient locationClient;
+    // Adapter for the Parse query
+    private ParseQueryAdapter<Post> posts;
+
+
+
 
     // TODO: Rename and change types of parameters
     public static PostFragment newInstance(String param1, String param2) {
@@ -111,6 +153,20 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
 
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
+
+
+        map = (SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map);
+        // Enable the current location "blue dot"
+        map.getMap().setMyLocationEnabled(true);
+        // Set up the camera change handler
+        map.getMap().setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
+            public void onCameraChange(CameraPosition position) {
+                // Run the map query
+            }
+        });
+
+
+
 
         return view;
     }
