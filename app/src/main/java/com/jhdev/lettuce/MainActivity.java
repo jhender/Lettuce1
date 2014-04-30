@@ -375,8 +375,7 @@ public class MainActivity extends FragmentActivity implements
 
         mCurrentLocation = mLocationClient.getLastLocation();
 
-        Toast.makeText(this, "Your location issss " + mCurrentLocation, Toast.LENGTH_LONG).show();
-
+        Toast.makeText(this, "Activity Notification: Location: " + mCurrentLocation, Toast.LENGTH_LONG).show();
 
     }
 

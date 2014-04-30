@@ -49,7 +49,6 @@ public class PostCreateActivity extends Activity implements
 	String imageFileName;
     private static ParseGeoPoint geoPoint;
     private Location lastLocation = null;
-    private Location currentLocation = null;
 
     // A request to connect to Location Services
     private LocationRequest locationRequest;
@@ -84,6 +83,7 @@ public class PostCreateActivity extends Activity implements
         final EditText editTextTitle = (EditText) findViewById(R.id.editTextTitle);        
         final EditText editTextDescription = (EditText) findViewById(R.id.editTextDescription);
         textViewLocation = (TextView) findViewById(R.id.textViewLocation);
+
         
 		//code that uploads an image to Parse immediately to reduce savingtime.
         //if user presses back or cancels, file is still on server but not linked to a imageUpload.
@@ -153,10 +153,6 @@ public class PostCreateActivity extends Activity implements
         finish();
 	}
 
-//    private ParseGeoPoint geoPointFromLocation(Location loc) {
-//        return new ParseGeoPoint(loc.getLatitude(), loc.getLongitude());
-//    }
-
     /**
      *  ***********************************************************************
      *  LOCATION STUFF
@@ -214,12 +210,15 @@ public class PostCreateActivity extends Activity implements
 
         mCurrentLocation = mLocationClient.getLastLocation();
 
+
         Toast.makeText(this,
                 "Your location is "
                 + mCurrentLocation.getLatitude()
                 + ", "
                 + mCurrentLocation.getLongitude(),
                 Toast.LENGTH_LONG).show();
+
+        textViewLocation.setText("Coors:" + mCurrentLocation.getLatitude() + mCurrentLocation.getLongitude());
 
         geoPoint = new ParseGeoPoint(mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude());
 
