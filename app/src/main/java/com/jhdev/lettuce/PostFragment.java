@@ -1,9 +1,11 @@
 package com.jhdev.lettuce;
 
 import android.app.Activity;
+import android.app.Application;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,17 +15,30 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseQuery;
 import com.parse.ParseQueryAdapter;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A fragment representing a list of Items.
@@ -34,7 +49,10 @@ import java.util.Map;
  * Activities containing this fragment MUST implement the Callbacks
  * interface.
  */
-public class PostFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class PostFragment extends Fragment implements AbsListView.OnItemClickListener,
+        LocationListener,
+        GooglePlayServicesClient.ConnectionCallbacks,
+        GooglePlayServicesClient.OnConnectionFailedListener{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -88,6 +106,28 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
     // Adapter for the Parse query
     private ParseQueryAdapter<Post> posts;
 
+    /*
+  * Constants for handling location results
+  */
+    // Conversion from feet to meters
+    private static final float METERS_PER_FEET = 0.3048f;
+
+    // Conversion from kilometers to meters
+    private static final int METERS_PER_KILOMETER = 1000;
+
+    // Initial offset for calculating the map bounds
+    private static final double OFFSET_CALCULATION_INIT_DIFF = 1.0;
+
+    // Accuracy for calculating the map bounds
+    private static final float OFFSET_CALCULATION_ACCURACY = 0.01f;
+
+    // Maximum results returned from a Parse query
+    private static final int MAX_POST_SEARCH_RESULTS = 20;
+
+    // Maximum post search radius for map in kilometers
+    private static final int MAX_POST_SEARCH_DISTANCE = 1000;
+
+
 
 
 
@@ -119,6 +159,8 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
 
         nearbyAdapter = new CustomParseQueryAdapter(getActivity());
 
+        // Create a new location client, using the enclosing class to handle callbacks.
+        locationClient = new LocationClient(getActivity(), this, this);
     }
 
     @Override
@@ -154,6 +196,8 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
         // Set OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
 
+        locationClient.connect();
+
 
         map = (SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map);
         // Enable the current location "blue dot"
@@ -162,6 +206,7 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
         map.getMap().setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
             public void onCameraChange(CameraPosition position) {
                 // Run the map query
+                doMapQuery();
             }
         });
 
@@ -225,5 +270,153 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
 //        // TODO: Update argument type and name
 //        public void onFragmentInteraction(String id);
 //    }
+
+  /*
+   * Helper method to get the Parse GEO point representation of a location
+   */
+    private ParseGeoPoint geoPointFromLocation(Location loc) {
+        return new ParseGeoPoint(loc.getLatitude(), loc.getLongitude());
+    }
+
+
+
+    /*
+     * Get the current location
+     */
+    private Location getLocation() {
+        // If Google Play Services is available
+       // if (servicesConnected()) {
+            // Get the current location
+            return locationClient.getLastLocation();
+       // } else {
+         //   return null;
+       // }
+    }
+
+    public void onLocationChanged(Location location) {
+    }
+
+    public void onConnected(Bundle bundle) {
+        currentLocation = getLocation();
+    }
+
+    public void onDisconnected() {
+    }
+
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+    }
+
+        /**
+         *  The Map Markers
+         */
+     /*
+   * Set up the query to update the map view
+   */
+    private void doMapQuery() {
+        Log.d("PostFragment.java", "start doMapQuery");
+        final int myUpdateNumber = ++mostRecentMapUpdate;
+        //Location myLoc = (currentLocation == null) ? lastLocation : currentLocation;
+        Location myLoc = currentLocation;
+        // If location info isn't available, clean up any existing markers
+        Log.d("PostFragment.java", "current Loc:" + currentLocation);
+
+        if (myLoc == null) {
+            //cleanUpMarkers(new HashSet<String>());
+            Log.d("PostFragment.java", "myLoc = null");
+
+            return;
+        }
+        final ParseGeoPoint myPoint = geoPointFromLocation(myLoc);
+        // Create the map Parse query
+        ParseQuery<Post> mapQuery = Post.getQuery();
+        // Set up additional query filters
+        mapQuery.whereWithinKilometers("location", myPoint, MAX_POST_SEARCH_DISTANCE);
+        mapQuery.include("user");
+        mapQuery.orderByDescending("createdAt");
+        mapQuery.setLimit(MAX_POST_SEARCH_RESULTS);
+        // Kick off the query in the background
+        mapQuery.findInBackground(new FindCallback<Post>() {
+            @Override
+            public void done(List<Post> objects, ParseException e) {
+                if (e != null) {
+//                    if (Application.APPDEBUG) {
+//                        Log.d(Application.APPTAG, "An error occurred while querying for map posts.", e);
+//                    }
+                    return;
+                }
+        /*
+         * Make sure we're processing results from
+         * the most recent update, in case there
+         * may be more than one in progress.
+         */
+                if (myUpdateNumber != mostRecentMapUpdate) {
+                    return;
+                }
+                // Posts to show on the map
+                Set<String> toKeep = new HashSet<String>();
+                // Loop through the results of the search
+                for (Post post : objects) {
+                    // Add this post to the list of map pins to keep
+                    toKeep.add(post.getObjectId());
+                    // Check for an existing marker for this post
+                    Marker oldMarker = mapMarkers.get(post.getObjectId());
+                    // Set up the map marker's location
+                    MarkerOptions markerOpts =
+                            new MarkerOptions().position(new LatLng(post.getLocation().getLatitude(), post
+                                    .getLocation().getLongitude()));
+                    // Set up the marker properties based on if it is within the search radius
+                    if (post.getLocation().distanceInKilometersTo(myPoint) > radius * METERS_PER_FEET
+                            / METERS_PER_KILOMETER) {
+                        // Check for an existing out of range marker
+                        if (oldMarker != null) {
+                            if (oldMarker.getSnippet() == null) {
+                                // Out of range marker already exists, skip adding it
+                                continue;
+                            } else {
+                                // Marker now out of range, needs to be refreshed
+                                oldMarker.remove();
+                            }
+                        }
+                        // Display a red marker with a predefined title and no snippet
+//                        markerOpts =
+//                                markerOpts.title(getResources().getString(R.string.post_out_of_range)).icon(
+//                                        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                        markerOpts =
+                                markerOpts.title(post.getTitle()).icon(
+                                        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
+                    } else {
+                        // Check for an existing in range marker
+                        if (oldMarker != null) {
+                            if (oldMarker.getSnippet() != null) {
+                                // In range marker already exists, skip adding it
+                                continue;
+                            } else {
+                                // Marker now in range, needs to be refreshed
+                                oldMarker.remove();
+                            }
+                        }
+                        // Display a green marker with the post information
+                        markerOpts =
+                                markerOpts.title(post.getTitle()).snippet(post.getUser().getUsername())
+                                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                    }
+                    // Add a new marker
+                    Marker marker = map.getMap().addMarker(markerOpts);
+                    mapMarkers.put(post.getObjectId(), marker);
+                    Log.d("PostFragment.java", "marker added" + post.getTitle());
+                    if (post.getObjectId().equals(selectedObjectId)) {
+                        marker.showInfoWindow();
+                        selectedObjectId = null;
+                    }
+                }
+                // Clean up old markers.
+                //cleanUpMarkers(toKeep);
+            }
+        });
+    }
+
+
+
+
 
 }
