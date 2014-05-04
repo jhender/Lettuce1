@@ -125,7 +125,7 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
     private static final int MAX_POST_SEARCH_RESULTS = 20;
 
     // Maximum post search radius for map in kilometers
-    private static final int MAX_POST_SEARCH_DISTANCE = 1000;
+    private static final int MAX_POST_SEARCH_DISTANCE = 10;
 
 
 
@@ -271,6 +271,7 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
 //        public void onFragmentInteraction(String id);
 //    }
 
+
   /*
    * Helper method to get the Parse GEO point representation of a location
    */
@@ -349,9 +350,9 @@ public class PostFragment extends Fragment implements AbsListView.OnItemClickLis
          * the most recent update, in case there
          * may be more than one in progress.
          */
-                if (myUpdateNumber != mostRecentMapUpdate) {
-                    return;
-                }
+//                if (myUpdateNumber != mostRecentMapUpdate) {
+//                    return;
+//                }
                 // Posts to show on the map
                 Set<String> toKeep = new HashSet<String>();
                 // Loop through the results of the search
